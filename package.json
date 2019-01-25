@@ -32,7 +32,11 @@
       "plugin:vue/essential",
       "@vue/airbnb"
     ],
-    "rules": {},
+    "rules": {
+      "comma-dangle": ["error", "never"],
+      "arrow-body-style": ["error", "always"],
+      "no-param-reassign": ["error", { "props": false }]
+    },
     "parserOptions": {
       "parser": "babel-eslint"
     }
