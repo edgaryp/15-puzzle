@@ -31,12 +31,16 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    createTiles(state) {
+    createTiles(state, init) {
       const tiles = [];
       for (let i = 0; i < state.puzzleDimension ** 2; i += 1) {
         tiles.push(i);
       }
-      state.tiles = tiles.sort(() => Math.random() - 0.5);
+      if (init) {
+        state.tiles = tiles.sort((a, b) => (a === 0) - (b === 0) || +(a > b) || -(a < b));
+      } else {
+        state.tiles = tiles.sort(() => Math.random() - 0.5);
+      }
     },
     startPuzzle(state, difficulty) {
       state.puzzleDimension = difficulty;

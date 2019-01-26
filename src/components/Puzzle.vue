@@ -1,6 +1,6 @@
 <template>
   <div class="puzzle-wrap col-12">
-    <div v-if="checkVictory" class="victory overlay">
+    <div v-if="checkVictory && gameStart" class="victory overlay">
       <h1>You're awesome!!</h1>
       <h4>Play again?</h4>
       <div>

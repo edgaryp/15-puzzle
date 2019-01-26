@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button type="button" class="btn btn-success btn-lg" @click="start(2)">Easy</button>
+    <button type="button" class="btn btn-success btn-lg" @click="start(3)">Easy</button>
     <button type="button" class="btn btn-success btn-lg" @click="start(4)">Medium</button>
     <button type="button" class="btn btn-success btn-lg" @click="start(5)">Hard</button>
   </div>

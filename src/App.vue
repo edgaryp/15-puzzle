@@ -45,7 +45,7 @@ export default {
     ])
   },
   created() {
-    this.createTiles();
+    this.createTiles('init');
   }
 };
 </script>
