@@ -17,10 +17,8 @@ export default class Tile {
 
   getTileMovement() {
     const neighbors = this.getTileNeighbors();
-    if (neighbors.top === 'empty' || neighbors.right === 'empty' || neighbors.left === 'empty' || neighbors.bottom === 'empty') {
-      return true;
-    }
-    return false;
+    const { top, right, bottom, left } = neighbors;
+    return top === 'empty' || right === 'empty' || left === 'empty' || bottom === 'empty';
   }
 
   getTile() {
