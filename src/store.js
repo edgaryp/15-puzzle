@@ -1,6 +1,6 @@
-/* eslint-disable */
 import Vue from 'vue';
 import Vuex from 'vuex';
+import Tile from './helpers/tile';
 
 Vue.use(Vuex);
 
@@ -8,58 +8,45 @@ export default new Vuex.Store({
   state: {
     puzzleDimension: 4,
     tiles: null,
-    targetTile: {
-      label: null,
-      index: null
-    }
+    targetTile: null,
+    gameStart: false,
+    invalidMove: false,
+    victory: false
   },
   getters: {
-    totalTilesCount(state) {
-      return state.puzzleDimension ** 2;
-    },
     shuffleTilesInGrid(state) {
-      const tiles = [...state.tiles];
+      const tiles = state.tiles.map((tile) => {
+        const tileClass = new Tile(tile, state.tiles, state.puzzleDimension);
+        return tileClass.getTile();
+      });
       const shuffleTilesInGrid = [];
       for (let i = 0; i < state.puzzleDimension; i += 1) {
         shuffleTilesInGrid.push(tiles.splice(0, state.puzzleDimension));
       }
       return shuffleTilesInGrid;
     },
-    targetTileNeighbors(state) {
-      const { index } = state.targetTile;
-      const { puzzleDimension } = state;
-      if (state.targetTile.label) {
-        return {
-          self: state.tiles[index],
-          top: state.tiles[index - puzzleDimension] === 0 ? 'empty' : null,
-          right: index % puzzleDimension !== 3 ? state.tiles[index + 1] || 'empty' : null,
-          bottom: state.tiles[index + puzzleDimension] === 0 ? 'empty' : null,
-          left: index % puzzleDimension ? state.tiles[index - 1] || 'empty' : null
-        };
-      } else {
-        return null;
-      }
-    },
-    invalidMoveTile(state, getters) {
-      return (getters.targetTileNeighbors && getters.targetTileNeighbors.self !== 0) && true;
+    checkVictory(state) {
+      const tiles = state.tiles.slice(0, state.tiles.length - 1);
+      return tiles.every((tile, index) => tile - index === 1) && state.tiles[state.tiles.length - 1] === 0;
     }
   },
   mutations: {
-    setRandomiseTiles(state, difficulty) {
+    createTiles(state) {
+      const tiles = [];
+      for (let i = 0; i < state.puzzleDimension ** 2; i += 1) {
+        tiles.push(i);
+      }
+      state.tiles = tiles.sort(() => Math.random() - 0.5);
+    },
+    startPuzzle(state, difficulty) {
       state.puzzleDimension = difficulty;
+      state.gameStart = true;
     },
-    setTiles(state, tiles) {
-      state.tiles = [...tiles];
-    },
-    setTargetTile(state, tile) {
-      state.targetTile.label = tile;
-      state.targetTile.index = state.tiles.indexOf(tile);
-    },
-    setUpdateTiles(state, data) {
-      const { self, top, right, bottom, left } = data.targetTileNeighbors;
-      const { index, label } = state.targetTile;
+    updateTiles(state, tile) {
+      const { top, right, bottom, left } = tile.neighbors;
+      const { label, index } = tile;
       const tiles = [...state.tiles];
-      if (label > 0) {
+      if (tile.movement) {
         if (top === 'empty') {
           tiles[index - state.puzzleDimension] = label;
           tiles[index] = 0;
@@ -74,26 +61,10 @@ export default new Vuex.Store({
           tiles[index] = 0;
         }
         state.tiles = [...tiles];
-      }
-    }
-  },
-  actions: {
-    createTiles({ commit, getters }, difficulty) {
-      const tiles = [];
-      const tilesCount = difficulty ** 2 || getters.totalTilesCount;
-      for (let i = 0; i < tilesCount; i += 1) {
-        tiles.push(i);
-      }
-      if (difficulty) {
-        commit('setRandomiseTiles', difficulty);
-        commit('setTiles', tiles.sort(() => Math.random() - 0.5));
+        state.invalidMove = false;
       } else {
-        commit('setTiles', tiles.sort((a, b) => (a===0)-(b===0) || +(a>b) || -(a<b)));
+        state.invalidMove = tile;
       }
-    },
-    updateTiles({ commit, getters }, tile) {
-      const { targetTileNeighbors } = getters;
-      commit('setUpdateTiles', { targetTileNeighbors, tile });
     }
   }
 });
