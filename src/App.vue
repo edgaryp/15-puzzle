@@ -8,7 +8,7 @@
             <div class="row">
               <Puzzle />
             </div>
-            <div v-if="invalidMoveTile"  class="row">
+            <div v-if="invalidMove" class="row">
               <AlertMessage />
             </div>
           </div>
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import Puzzle from './components/Puzzle.vue';
 import AlertMessage from './components/AlertMessage.vue';
 
@@ -36,18 +36,11 @@ export default {
   },
   computed: {
     ...mapState([
-      'puzzleDimension',
-      'tiles',
-      'targetTile'
-    ]),
-    ...mapGetters([
-      'totalTilesCount',
-      'shuffleTilesInGrid',
-      'invalidMoveTile'
+      'invalidMove'
     ])
   },
   methods: {
-    ...mapActions([
+    ...mapMutations([
       'createTiles'
     ])
   },

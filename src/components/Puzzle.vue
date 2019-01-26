@@ -1,14 +1,19 @@
 <template>
   <div class="puzzle-wrap col-12">
+    <div v-if="checkVictory" class="victory overlay">
+      <h1>You're awesome!!</h1>
+      <h4>Play again?</h4>
+      <div>
+        <PlayButtons />
+      </div>
+    </div>
     <div v-if="!gameStart" class="overlay">
-      <button type="button" class="btn btn-success btn-lg" @click="start(3)">Easy</button>
-      <button type="button" class="btn btn-success btn-lg" @click="start(4)">Medium</button>
-      <button type="button" class="btn btn-success btn-lg" @click="start(5)">Hard</button>
+      <PlayButtons />
     </div>
     <div :class="`row row-${index}`" v-for="(row, index) in shuffleTilesInGrid" :key="index">
-      <div class="tile" :class="{'empty': tile === 0}" v-for="(tile, index) in row" :key="index" :style="{ width: 100 / puzzleDimension + '%', paddingTop: 100 / puzzleDimension + '%' }" @click="tileClick(tile)">
+      <div class="tile" :class="{'empty': tile.label === 0}" v-for="(tile, index) in row" :key="index" :style="{ width: 100 / puzzleDimension + '%', paddingTop: 100 / puzzleDimension + '%', cursor: tile.movement ? 'pointer' : 'default' }" @click="moveTile(tile)">
         <div>
-          {{tile || ''}}
+          <p>{{tile.label || ''}}</p>
         </div>
       </div>
     </div>
@@ -16,46 +21,32 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
+import { mapState, mapGetters, mapMutations } from 'vuex';
+import PlayButtons from './PlayButtons.vue';
 
 export default {
   name: 'puzzle',
-  data() {
-    return {
-      gameStart: false
-    };
+  components: {
+    PlayButtons
   },
   computed: {
     ...mapState([
       'puzzleDimension',
       'tiles',
-      'targetTile'
+      'targetTile',
+      'gameStart'
     ]),
     ...mapGetters([
-      'totalTilesCount',
       'shuffleTilesInGrid',
-      'targetTileNeighbors',
-      'invalidMoveTile'
+      'checkVictory'
     ])
   },
   methods: {
     ...mapMutations([
-      'setTargetTile',
-      'setRandomiseTiles'
+      'updateTiles'
     ]),
-    ...mapActions([
-      'updateTiles',
-      'createTiles'
-    ]),
-    start(difficulty) {
-      this.createTiles(difficulty);
-      this.gameStart = !this.gameStart;
-    },
-    tileClick(tile) {
-      if (tile) {
-        this.setTargetTile(tile);
-        this.updateTiles(tile);
-      }
+    moveTile(tile) {
+      this.updateTiles(tile);
     }
   }
 };
@@ -66,6 +57,18 @@ export default {
   position: relative;
   margin-top: 20px;
   margin-bottom: 20px;
+  border: 2px solid #cacaca;
+  padding-top: 5px !important;
+  padding-bottom: 5px;
+  padding-right: 20px;
+  padding-left: 20px;
+  .victory {
+    flex-direction: column;
+    h1 {
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+  }
   .overlay {
     width: 100%;
     height: 100%;
@@ -77,12 +80,6 @@ export default {
     top: 0;
     left: 0;
     z-index: 10;
-    .btn {
-      margin: 10px;
-      @media (max-width: 575.98px) {
-        font-size: 1em !important;
-      }
-    }
   }
   .row {
     display: flex;
@@ -109,9 +106,6 @@ export default {
     }
     &.empty div {
       background-color: white;
-    }
-    &:not(.empty) {
-      cursor: pointer;
     }
   }
   .label {

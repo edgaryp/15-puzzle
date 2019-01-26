@@ -1,12 +1,18 @@
 <template>
   <div class="alert alert-primary col-12" role="alert">
-    This is a primary alert—check it out!
+    Tile {{invalidMove.label}} can't move
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
 
 export default {
-  name: 'alert-message'
+  name: 'alert-message',
+  computed: {
+    ...mapState([
+      'invalidMove'
+    ])
+  }
 };
 </script>
