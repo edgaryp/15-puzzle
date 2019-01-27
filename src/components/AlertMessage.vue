@@ -11,8 +11,8 @@ export default {
   name: 'alert-message',
   computed: {
     ...mapState([
-      'invalidMove'
-    ])
-  }
+      'invalidMove',
+    ]),
+  },
 };
 </script>

@@ -27,28 +27,28 @@ import PlayButtons from './PlayButtons.vue';
 export default {
   name: 'puzzle',
   components: {
-    PlayButtons
+    PlayButtons,
   },
   computed: {
     ...mapState([
       'puzzleDimension',
       'tiles',
       'targetTile',
-      'gameStart'
+      'gameStart',
     ]),
     ...mapGetters([
       'shuffleTilesInGrid',
-      'checkVictory'
-    ])
+      'checkVictory',
+    ]),
   },
   methods: {
     ...mapMutations([
-      'updateTiles'
+      'updateTiles',
     ]),
     moveTile(tile) {
       this.updateTiles(tile);
-    }
-  }
+    },
+  },
 };
 </script>
 
