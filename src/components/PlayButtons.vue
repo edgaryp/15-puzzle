@@ -14,13 +14,13 @@ export default {
   methods: {
     ...mapMutations([
       'startPuzzle',
-      'createTiles'
+      'createTiles',
     ]),
     start(difficulty) {
       this.startPuzzle(difficulty);
       this.createTiles();
-    }
-  }
+    },
+  },
 };
 </script>
 

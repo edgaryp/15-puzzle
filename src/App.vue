@@ -32,21 +32,21 @@ export default {
   },
   components: {
     Puzzle,
-    AlertMessage
+    AlertMessage,
   },
   computed: {
     ...mapState([
-      'invalidMove'
-    ])
+      'invalidMove',
+    ]),
   },
   methods: {
     ...mapMutations([
-      'createTiles'
-    ])
+      'createTiles',
+    ]),
   },
   created() {
     this.createTiles('init');
-  }
+  },
 };
 </script>
 

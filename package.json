@@ -36,24 +36,26 @@
     "rules": {
       "comma-dangle": [
         "error",
-        "never"
+        "always-multiline"
       ],
       "no-param-reassign": [
-        "error",
-        {
+        "error", {
           "props": false
         }
       ],
       "max-len": [
-        "error",
-        {
+        "error", {
           "code": 300
         }
       ],
       "object-curly-newline": [
-        "error",
-        {
+        "error", {
           "ImportDeclaration": "never"
+        }
+      ],
+      "no-trailing-spaces": [
+        "error", {
+          "ignoreComments": true
         }
       ]
     },
